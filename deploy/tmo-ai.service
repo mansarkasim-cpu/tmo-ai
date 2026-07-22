@@ -18,6 +18,9 @@ Environment="PATH=/opt/tmo-ai/venv/bin"
 Environment="TRANSFORMERS_CACHE=/var/cache/tmo-ai/huggingface"
 Environment="XDG_CACHE_HOME=/var/cache/tmo-ai"
 Environment="HOME=/opt/tmo-ai"
+Environment="HF_HOME=/var/cache/tmo-ai/huggingface"
+Environment="HUGGINGFACE_HUB_CACHE=/var/cache/tmo-ai/huggingface"
+Environment="HF_DATASETS_CACHE=/var/cache/tmo-ai/huggingface"
 
 # Example: set database path to a writable location (optional)
 # Environment="TMO_AI_DB_PATH=/var/lib/tmo-ai/tmo_ai.db"
