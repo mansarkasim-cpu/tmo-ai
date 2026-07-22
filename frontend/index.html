@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TMO-AI Chat</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>TMO-AI</h1>
+        <div class="api-config">
+          <label for="apiBase">API URL</label>
+          <input id="apiBase" type="text" value="http://localhost:8000" />
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">
+          <span>Dokumen</span>
+          <button id="refreshDocuments" title="Muat ulang">&#8635;</button>
+        </div>
+        <ul id="documentsList" class="list"></ul>
+        <form id="uploadForm" class="memory-form">
+          <input id="uploadFile" type="file" accept="application/pdf" required />
+          <button type="submit" id="uploadBtn">Upload PDF</button>
+          <span id="uploadStatus" class="upload-status"></span>
+        </form>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">
+          <span>Riwayat Chat</span>
+          <button id="refreshChats" title="Muat ulang">&#8635;</button>
+        </div>
+        <ul id="chatHistoryList" class="list"></ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">
+          <span>Memories</span>
+          <button id="refreshMemories" title="Muat ulang">&#8635;</button>
+        </div>
+        <ul id="memoriesList" class="list"></ul>
+        <form id="memoryForm" class="memory-form">
+          <input id="memoryKey" type="text" placeholder="key (opsional)" />
+          <input id="memoryValue" type="text" placeholder="value" required />
+          <button type="submit">Simpan Memory</button>
+        </form>
+      </div>
+    </aside>
+
+    <main class="chat-area">
+      <div class="chat-toolbar">
+        <label for="documentSelect">Dokumen aktif:</label>
+        <select id="documentSelect">
+          <option value="">(otomatis / tanpa dokumen)</option>
+        </select>
+        <label for="modelSelect" style="margin-left:12px">Model:</label>
+        <select id="modelSelect">
+          <option value="">(default)</option>
+          <option value="hf:facebook/blenderbot-400M-distill">HF: blenderbot-400M</option>
+          <option value="hf:gpt2">HF: gpt2 (small)</option>
+          <option value="ollama:qwen3:8b">Ollama: qwen3:8b</option>
+          <option value="custom">Custom...</option>
+        </select>
+        <input id="modelCustom" type="text" placeholder="custom model id (hf:..., ollama:...)" style="display:none; margin-left:8px; min-width:220px" />
+      </div>
+
+      <div id="messages" class="messages"></div>
+
+      <form id="chatForm" class="chat-form">
+        <input
+          id="messageInput"
+          type="text"
+          placeholder="Tulis pesan... (mis. 'siapa Magda?' atau 'simpan ke memory: ...')"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" id="sendBtn">Kirim</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

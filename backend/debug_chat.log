@@ -1,0 +1,19 @@
+ASK_AI_CALL message='ada berapa halaman dokumen ini?' context_len=894 document_id=ad972fd3-3e49-43e3-9982-ae2b16eddb00
+ASK_AI_CALL message='apa judul dokumennya?' context_len=894 document_id=ad972fd3-3e49-43e3-9982-ae2b16eddb00
+ASK_AI_CALL message='jelaskan masalah market share pada dokumen ini' context_len=894 document_id=ad972fd3-3e49-43e3-9982-ae2b16eddb00
+ASK_AI_CALL message='pembahasan pada market share ada pada halaman 62. buat kesimpulannya' context_len=894 document_id=ad972fd3-3e49-43e3-9982-ae2b16eddb00
+ASK_AI_CALL message='apakah kamu tidak bisa menganalisanya?' context_len=894 document_id=ad972fd3-3e49-43e3-9982-ae2b16eddb00
+ASK_AI_CALL message='ada berapa halaman pada dokumen ini?' context_len=894 document_id=16c6ce74-e7ff-4bb4-a9d8-34aa64471136
+ASK_AI_CALL message='jelaskan tentang market share pelindo pada dokumen ini' context_len=894 document_id=16c6ce74-e7ff-4bb4-a9d8-34aa64471136
+REQUEST document_id=c3a0c380-0302-4149-9756-055e10c7f625 text_len=848
+ASK_AI_CALL message='berikan ringkasan tentang dokumen ini' context_len=894 document_id=c3a0c380-0302-4149-9756-055e10c7f625
+RESPONSE document_id=c3a0c380-0302-4149-9756-055e10c7f625 answer_snippet=Dokumen ini adalah laporan kinerja PT Pelindo Jasa Maritim periode s.d. Juni 2026, mencakup: (1) Laporan Operasional, (2) HSSE (Health, Safety, Security, Environment) dengan data kecelakaan kerja, (3) Keuangan & Manajemen Risiko, (4) SDM, (5) Investasi, (6) KPI & Inisiatif Strategis, serta (7) Marke
+REQUEST document_id=c3a0c380-0302-4149-9756-055e10c7f625 text_len=848
+ASK_AI_CALL message='jelaskan tentang market share pada dokumen ini' context_len=894 document_id=c3a0c380-0302-4149-9756-055e10c7f625
+RESPONSE document_id=c3a0c380-0302-4149-9756-055e10c7f625 answer_snippet=Berdasarkan dokumen, bagian 'Market Share' terdapat pada halaman 61 dan dijelaskan dalam outline dokumen. Namun, detail spesifik mengenai persentase pasar atau analisis kompetitif tidak tersedia dalam hasil pencarian. Informasi lebih lanjut mungkin terdapat dalam lampiran (halaman 69) atau bagian la
+REQUEST document_id=c3a0c380-0302-4149-9756-055e10c7f625 text_len=848
+ASK_AI_CALL message='siapa presiden indonesia saat ini?' context_len=894 document_id=c3a0c380-0302-4149-9756-055e10c7f625
+RESPONSE document_id=c3a0c380-0302-4149-9756-055e10c7f625 answer_snippet=Presiden Indonesia saat ini adalah Prabowo Subianto, yang terpilih pada pemilihan umum 2024 dan dilantik pada 20 Oktober 2024.
+REQUEST document_id=c3a0c380-0302-4149-9756-055e10c7f625 text_len=848
+ASK_AI_CALL message='tanggal berapa sekarang?' context_len=894 document_id=c3a0c380-0302-4149-9756-055e10c7f625
+RESPONSE document_id=c3a0c380-0302-4149-9756-055e10c7f625 answer_snippet=Tanggal saat ini adalah 2026-07-22.
