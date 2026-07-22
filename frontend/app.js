@@ -26,7 +26,9 @@ const els = {
 };
 
 function getApiBase() {
-  return (els.apiBase.value || "http://localhost:8000").replace(/\/+$/, "");
+  // Default to the proxied `/api` path so the frontend uses the same origin
+  // and avoids browser private network / CORS issues when served from HTTPS.
+  return (els.apiBase.value || "/api").replace(/\/+$/, "");
 }
 
 function addMessage(role, text, docId) {
