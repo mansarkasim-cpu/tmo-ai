@@ -13,6 +13,12 @@ WorkingDirectory=/opt/tmo-ai/backend
 # Ensure the virtualenv's bin is used for ExecStart and any child processes
 Environment="PATH=/opt/tmo-ai/venv/bin"
 
+# Cache directories for Hugging Face / Transformers to avoid writes to /home/tmoai
+# Create and chown `/var/cache/tmo-ai` on the server and make it writable by the `tmoai` user.
+Environment="TRANSFORMERS_CACHE=/var/cache/tmo-ai/huggingface"
+Environment="XDG_CACHE_HOME=/var/cache/tmo-ai"
+Environment="HOME=/opt/tmo-ai"
+
 # Example: set database path to a writable location (optional)
 # Environment="TMO_AI_DB_PATH=/var/lib/tmo-ai/tmo_ai.db"
 
