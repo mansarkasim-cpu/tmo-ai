@@ -28,11 +28,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(chat_router)
-app.include_router(upload_router)
-app.include_router(documents_router)
-app.include_router(kb_router)
-app.include_router(sql_router)
+# Expose API endpoints under the `/api` prefix so the frontend can
+# proxy requests to `/api/...` and they map directly to backend routes.
+app.include_router(chat_router, prefix="/api")
+app.include_router(upload_router, prefix="/api")
+app.include_router(documents_router, prefix="/api")
+app.include_router(kb_router, prefix="/api")
+app.include_router(sql_router, prefix="/api")
 
 
 @app.on_event("startup")
