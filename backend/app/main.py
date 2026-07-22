@@ -10,7 +10,13 @@ from app.services.sql_service import init_db
 
 app = FastAPI(
     title="TMO-AI",
-    version="0.1.0"
+    version="0.1.0",
+    # Expose API docs under the proxied `/api` path so the browser
+    # (served from the same origin) doesn't attempt to access loopback
+    # addresses and to keep docs colocated with the API path.
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json",
+    redoc_url=None,
 )
 
 # Allow the frontend (served from a different origin/port) to call the API.
