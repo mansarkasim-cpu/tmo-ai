@@ -1,0 +1,29 @@
+[Unit]
+Description=TMO-AI FastAPI service
+After=network.target
+
+[Service]
+# Run as an unprivileged system user created for the app (adjust as needed)
+User=tmoai
+Group=tmoai
+
+# Working directory containing backend (where tmo_ai.db will be created by default)
+WorkingDirectory=/opt/tmo-ai/backend
+
+# Ensure the virtualenv's bin is used for ExecStart and any child processes
+Environment="PATH=/opt/tmo-ai/venv/bin"
+
+# Example: set database path to a writable location (optional)
+# Environment="TMO_AI_DB_PATH=/var/lib/tmo-ai/tmo_ai.db"
+
+# Command to start the app. Adjust host/port/workers as needed.
+ExecStart=/opt/tmo-ai/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 4
+
+Restart=on-failure
+RestartSec=5
+
+# Increase file descriptors if needed
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
