@@ -18,6 +18,11 @@ class OllamaWrapper:
 
     def invoke(self, prompt: str) -> SimpleResponse:
         r = self.client.invoke(prompt)
+        # log raw response for debugging (goes to stdout / journal)
+        try:
+            print("Ollama raw response:", r)
+        except Exception:
+            pass
         # expect r has .content, but be defensive
         content = getattr(r, "content", None)
         if content is None:
@@ -25,6 +30,7 @@ class OllamaWrapper:
                 content = r[0]
             except Exception:
                 content = str(r)
+        print("Ollama response content:", content)
         return SimpleResponse(content)
 
 
@@ -84,17 +90,35 @@ class HFWrapper:
             conv = self.Conversation(prompt)
             out = self.pipe(conv)
             # pipeline returns list like [Conversation(..., generated_responses=[...])]
+            # emit raw pipeline output for diagnostics
+            try:
+                print("HF pipeline raw output:", out)
+            except Exception:
+                pass
             text = ""
             try:
+                # prefer the last generated response
                 text = out[0].generated_responses[-1]
             except Exception:
                 try:
                     text = str(out[0])
                 except Exception:
                     text = ""
+            try:
+                print("HF conversational text:", text)
+            except Exception:
+                pass
         else:
             out = self.pipe(prompt, max_length=512, do_sample=True, top_p=0.9, temperature=0.7)
+            try:
+                print("HF pipeline raw output:", out)
+            except Exception:
+                pass
             text = out[0].get("generated_text", "") if isinstance(out[0], dict) else str(out[0])
+            try:
+                print("HF text-generation text:", text)
+            except Exception:
+                pass
 
         return SimpleResponse(text)
 
