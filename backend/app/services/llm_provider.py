@@ -46,6 +46,7 @@ class HFWrapper:
             raise RuntimeError("transformers is required for HF backend. Install with: pip install transformers") from e
 
         model_name = model_name or os.environ.get("TMO_AI_HF_MODEL", "facebook/blenderbot-400M-distill")
+        self.model_name = model_name
         # choose conversational pipeline for BlenderBot models, fallback to text-generation
         if "blenderbot" in model_name.lower():
             self.task = "conversational"
@@ -111,6 +112,43 @@ class HFWrapper:
                 print("HF conversational text:", text, flush=True)
             except Exception:
                 pass
+            # if the model returned non-JSON (we expect JSON actions), try to reformat
+            try:
+                import json as _json
+                _json.loads(text)
+            except Exception:
+                try:
+                    from transformers import pipeline as _hf_pipeline
+                    import re as _re
+                    instruct = (
+                        "Convert the following assistant reply into a JSON object only (no surrounding text)."
+                        " The JSON should have an 'action' field and any other keys produced earlier. Assistant reply:\n" + text
+                    )
+                    # attempt a lightweight text-generation pass to reformat
+                    try:
+                        re_pipe = _hf_pipeline("text-generation", model=self.model_name)
+                        out2 = re_pipe(instruct, max_length=256)
+                        gen = out2[0].get("generated_text", "") if isinstance(out2[0], dict) else str(out2[0])
+                    except Exception:
+                        gen = ""
+                    try:
+                        print("HF reformat output:", gen, flush=True)
+                    except Exception:
+                        pass
+                    # try to extract JSON substring
+                    m = _re.search(r"(\{.*\})", gen, _re.DOTALL)
+                    candidate = m.group(1) if m else gen
+                    try:
+                        _json.loads(candidate)
+                        text = candidate
+                    except Exception:
+                        # leave original text if reformat failed
+                        pass
+                except Exception as _e:
+                    try:
+                        print("HF reformat attempt failed:", _e, flush=True)
+                    except Exception:
+                        pass
         else:
             out = self.pipe(prompt, max_length=512, do_sample=True, top_p=0.9, temperature=0.7)
             try:
