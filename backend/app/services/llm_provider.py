@@ -93,19 +93,24 @@ class HFWrapper:
         if self.task == "conversational":
             conv = self.Conversation(prompt)
             out = self.pipe(conv)
-            # pipeline returns list like [Conversation(..., generated_responses=[...])]
-            # emit raw pipeline output for diagnostics
+            # pipeline may return a Conversation or a list[Conversation]
             try:
                 print("HF pipeline raw output:", out, flush=True)
             except Exception:
                 pass
             text = ""
             try:
-                # prefer the last generated response
-                text = out[0].generated_responses[-1]
+                resp = out[0] if isinstance(out, list) and len(out) > 0 else out
+                gen = getattr(resp, "generated_responses", None)
+                if gen:
+                    # prefer the last generated response
+                    text = gen[-1]
+                else:
+                    # fallback to string representation which includes 'bot >>' lines
+                    text = str(resp)
             except Exception:
                 try:
-                    text = str(out[0])
+                    text = str(out)
                 except Exception:
                     text = ""
             try:
