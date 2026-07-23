@@ -181,14 +181,26 @@ def _ask_ai_impl(message: str, context: Optional[str] = None, document_id: Optio
         try:
             action_obj = json.loads(text)
         except Exception:
-            # if not JSON, ask the model to produce JSON only
-            prompt = (
-                system_msg
-                + "\nUser: "
-                + user_prompt
-                + "\n\nThe previous assistant output was not valid JSON. Reply with a JSON object only describing the action.\n"
-            )
-            continue
+            # If the model returned plain text that looks like a direct answer
+            # (and does not request a tool), accept it as a final answer.
+            # Heuristic: if the text contains keywords indicating a tool request,
+            # continue asking for JSON; otherwise treat as final.
+            low = text.lower()
+            tool_tokens = ["kb_search", "sql_query", "tool", "action", "kb", "sql", "search"]
+            if any(tok in low for tok in tool_tokens):
+                # ask the model to produce JSON only
+                prompt = (
+                    system_msg
+                    + "\nUser: "
+                    + user_prompt
+                    + "\n\nThe previous assistant output was not valid JSON. Reply with a JSON object only describing the action.\n"
+                )
+                continue
+            # treat as final answer
+            answer = text
+            total_ms = (time.perf_counter() - start_total) * 1000.0
+            _log_event("final_answer", {"answer": answer, "total_time_ms": round(total_ms, 2), "note": "accepted_plain_text"})
+            return answer
 
         action = action_obj.get("action")
         if action == "kb_search":
