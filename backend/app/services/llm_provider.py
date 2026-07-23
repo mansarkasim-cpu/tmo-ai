@@ -32,6 +32,7 @@ class HFWrapper:
     def __init__(self, model_name: str | None = None):
         try:
             from transformers import pipeline
+            from transformers import AutoTokenizer
         except Exception as e:
             raise RuntimeError("transformers is required for HF backend. Install with: pip install transformers") from e
 
@@ -43,11 +44,42 @@ class HFWrapper:
             from transformers import Conversation
 
             self.Conversation = Conversation
+            # load tokenizer for truncation guidance
+            try:
+                self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
+                self.model_max_length = getattr(self.tokenizer, "model_max_length", None) or getattr(self.tokenizer, "model_max_len", None)
+            except Exception:
+                self.tokenizer = None
+                self.model_max_length = None
         else:
             self.task = "text-generation"
             self.pipe = pipeline("text-generation", model=model_name)
+            try:
+                self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
+                self.model_max_length = getattr(self.tokenizer, "model_max_length", None) or getattr(self.tokenizer, "model_max_len", None)
+            except Exception:
+                self.tokenizer = None
+                self.model_max_length = None
 
     def invoke(self, prompt: str) -> SimpleResponse:
+        # if tokenizer known, ensure prompt length does not exceed model limits
+        try:
+            if getattr(self, "tokenizer", None) and self.model_max_length:
+                try:
+                    ids = self.tokenizer.encode(prompt, truncation=False)
+                    if len(ids) > int(self.model_max_length):
+                        # keep last portion of the prompt (most recent context)
+                        keep = max(64, int(self.model_max_length) - 50)
+                        trimmed_ids = ids[-keep:]
+                        prompt = self.tokenizer.decode(trimmed_ids, skip_special_tokens=True)
+                        print(f"Trimmed input from conversation as it was longer than {self.model_max_length} tokens.")
+                        print(f"Conversation input is too long ({len(ids)}), trimming it to ({keep})")
+                except Exception:
+                    # tokenizer.encode may fail for some models; ignore and proceed
+                    pass
+        except Exception:
+            pass
+
         if self.task == "conversational":
             conv = self.Conversation(prompt)
             out = self.pipe(conv)
